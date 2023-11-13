@@ -56,6 +56,96 @@ class User
      */
     private $password;
 
+    public function getIdUser(): int
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(int $idUser): void
+    {
+        $this->idUser = $idUser;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->fullName;
+    }
+
+    public function setFullName(string $fullName): void
+    {
+        $this->fullName = $fullName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(?string $mail): void
+    {
+        $this->mail = $mail;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getJwtToken(): ?string
+    {
+        return $this->jwtToken;
+    }
+
+    public function setJwtToken(?string $jwtToken): void
+    {
+        $this->jwtToken = $jwtToken;
+    }
+
+    public function getDelete(): bool|string|null
+    {
+        return $this->delete;
+    }
+
+    public function setDelete(bool|string|null $delete): void
+    {
+        $this->delete = $delete;
+    }
+
+    public function getIdRole(): \Role
+    {
+        return $this->idRole;
+    }
+
+    public function setIdRole(\Role $idRole): void
+    {
+        $this->idRole = $idRole;
+    }
+
     /**
      * @var string|null
      *

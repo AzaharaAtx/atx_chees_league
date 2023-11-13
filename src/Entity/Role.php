@@ -45,5 +45,45 @@ class Role
      */
     private $idRole;
 
+    public function getValue(): ?int
+    {
+        return $this->value;
+    }
+
+    public function setValue(?int $value): void
+    {
+        $this->value = $value;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getDelete(): bool|string
+    {
+        return $this->delete;
+    }
+
+    public function setDelete(bool|string $delete): void
+    {
+        $this->delete = $delete;
+    }
+
+    public function getIdRole(): \User
+    {
+        return $this->idRole;
+    }
+
+    public function setIdRole(\User $idRole): void
+    {
+        $this->idRole = $idRole;
+    }
+
 
 }

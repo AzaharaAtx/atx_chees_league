@@ -19,6 +19,76 @@ class Player
      */
     private $userNameinchess;
 
+    public function getUserNameinchess(): string
+    {
+        return $this->userNameinchess;
+    }
+
+    public function setUserNameinchess(string $userNameinchess): void
+    {
+        $this->userNameinchess = $userNameinchess;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
+    public function getFriendLink(): ?string
+    {
+        return $this->friendLink;
+    }
+
+    public function setFriendLink(?string $friendLink): void
+    {
+        $this->friendLink = $friendLink;
+    }
+
+    public function getEnabled(): int
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(int $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function getDelete(): bool|string
+    {
+        return $this->delete;
+    }
+
+    public function setDelete(bool|string $delete): void
+    {
+        $this->delete = $delete;
+    }
+
+    public function getLastSeen(): ?\DateTime
+    {
+        return $this->lastSeen;
+    }
+
+    public function setLastSeen(?\DateTime $lastSeen): void
+    {
+        $this->lastSeen = $lastSeen;
+    }
+
+    public function getIdPlayer(): \User
+    {
+        return $this->idPlayer;
+    }
+
+    public function setIdPlayer(\User $idPlayer): void
+    {
+        $this->idPlayer = $idPlayer;
+    }
+
     /**
      * @var string|null
      *
