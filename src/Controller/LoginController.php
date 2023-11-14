@@ -6,6 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+# Indicamos la ruta general
+/**
+ * @Route("^/api")
+ */
 class LoginController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
