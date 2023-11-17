@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Player;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function MongoDB\BSON\toJSON;
 
 class UserController extends AbstractController
 {
@@ -18,17 +20,27 @@ class UserController extends AbstractController
      * @param $em
      *
      */
+    private $doctrine;
 
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
+
+    //Creacion de objeto para obtener el encoder de cifrado para las ediciones
+    private $encoder;
+    public function __construct(/*UserPasswordEncoderInterface $encoder,*/ ManagerRegistry $doctrine) {
+        //$this->encoder = $encoder;
+        $this->doctrine = $doctrine;
     }
 
-    #[Route('/user/{id}', name: 'app_user')]
-    public function index($id): JsonResponse
+    /*public function __construct(EntityManagerInterface $em)
     {
-        $user = $this->em->getRepository(Player::class)->find($id);
-        return $this->json(['user' => $user]);
+        $this->em = $em;
+    }*/
+
+    #[Route('/user/{id}', name: 'app_user')]
+    public function index($id)
+    {
+        $user = array();
+        $user = $this->doctrine->getRepository(User::class)->findUser($id);
+        return $this->json($user);
 
 
     }
