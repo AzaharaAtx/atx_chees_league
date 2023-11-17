@@ -198,7 +198,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->full_name;
     }
 
-    public function setFullName(string $full_name): static
+    public function setFullName(string $full_name): self
     {
         $this->full_name = $full_name;
 
