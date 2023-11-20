@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
 {
-    #[Route('/api/login', name: 'api_app_login')]
+    #[Route('/login', name: 'api_app_login')]
     public function index(): JsonResponse
     {
         return $this->json([

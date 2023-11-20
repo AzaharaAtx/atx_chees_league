@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
@@ -19,8 +19,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(type: 'json')]
-    private array $roles = [];
+    #[ORM\Column(type: "string")]
+    private string $roles = '';
 
     /**
      * @var string The hashed password
@@ -85,12 +85,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles = 'ROLE_USER';
 
-        return array_unique($roles);
+        return ($roles);
     }
 
-    public function setRoles(array $roles): static
+    public function setRoles( $roles): static
     {
         $this->roles = $roles;
 
@@ -105,7 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
