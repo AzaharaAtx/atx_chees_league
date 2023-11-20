@@ -11,9 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class LoginController extends AbstractController
 {
     #[Route('/api/login', name: 'api_app_login')]
-    public function index(): Response
+    public function index(): JsonResponse
     {
-        return $this->response([
+        return $this->json([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/LoginController.php',
         ]);
