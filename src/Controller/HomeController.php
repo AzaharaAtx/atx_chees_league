@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[Route('/api', name: 'api_')]
+//#[Route('/api', name: 'api_^')]
 class HomeController extends AbstractController
 {
     #[Route('/home', name: 'app_home')]
