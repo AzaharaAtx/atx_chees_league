@@ -3,33 +3,28 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 class LoginController extends AbstractController
 {
-    #[Route('/login', name: 'api_app_login')]
-    public function index(): JsonResponse
+    #[Route('/login_chess', name: 'api_app_login'/*,  methods: ['POST']*/)]
+    public function index(): string
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/LoginController.php',
-        ]);
-    }
-/*
-    //Metodo para acceder al sistema
-    public function login(Security $security, UserInterface $user, JWTTokenManagerInterface $JWTManager) {
-        try {
-            $repository = $this->doctrine->getRepository(User::class);
-            $object = $security->getUser();
-            $object->setToken($JWTManager->create($user));
-            $message = $repository->login($object);
-        } catch(\Exception $e) {
-            $message = $e->getMessage();
-        }
+        //$user = $doctrine->getRepository(User::class)->findAll();
+        //$find = json_decode($user);
 
-        return $this->json($message);
-    }*/
+       // return $this->json($user);
+        return "Hola";
+
+    }
+
 }

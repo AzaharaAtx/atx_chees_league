@@ -34,14 +34,14 @@ class UserController extends AbstractController
     {
         $this->em = $em;
     }*/
-
+/*
     #[Route('/user/{id}', name: 'app_user')]
     public function index($id)
     {
-        /*$user = array();
+        $user = array();
         $user = $this->doctrine->getRepository(User::class)->findUser($id);
-        return $this->json($user);*/
+        return $this->json($user);
 
 
-    }
+    }*/
 }
