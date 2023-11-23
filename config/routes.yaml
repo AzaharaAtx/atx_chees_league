@@ -7,3 +7,8 @@ controllers:
 # config/routes.yaml
 api_login_check:
     path: /api/login_check
+
+# Delete user
+delete_user:
+    path: /user/{id}
+    controller: App\Controller\UserRegisterController::
