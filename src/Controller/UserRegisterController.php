@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
+use App\Trait\WithFormErrors;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,66 +16,60 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserRegisterController extends AbstractController
 {
+    use WithFormErrors;
     private UserPasswordHasherInterface $userPasswordHasher;
 
     //Inyectamos la interfaaz para hashear la contraseña
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em)
     {
         $this->userPasswordHasher = $userPasswordHasher;
+        $this->em = $em;
     }
-    #[Route('/user/register', name: 'app_user_register', methods: ['POST'])]
-    public function create(Request $request, ManagerRegistry $doctrine): JsonResponse
+    #[Route('/user/register', name: 'user_register', methods: ['POST'])]
+    public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        //Verificar si el usuario ya existe
-        $userExist = $doctrine->getRepository(User::class)->findOneBy(['email' => $data['email']]);
-
-        if ($userExist) {
-            return new JsonResponse(['error' => 'El usuario con este correo electrónico ya existe'], Response::HTTP_CONFLICT);
-        }
-
-        //Crear una nueva instancia de User
         $user = new User();
-        $user->setEmail($data['email']);
-        $user->setFullName($data['full_name']);
-        $user->setLastName($data['last_name']);
-        $user->setUserPlayer($data['user_player']);
-        $user->setUserRole($data['roles']);
+        $form = $this->createForm(UserType::class, $user, ['csrf_protection' => false]);
+        $form->submit($data);
 
-        //Crear y hashear la contraseña antes de almacenarla
-        $hash = $this->userPasswordHasher->hashPassword(
-            $user,
-            $data['password']
-        );
-        $user->setPassword($hash);
-
-        //Guardamos el nuevo usuario
-        $em = $doctrine->getManager();
-        $em->persist($user);
-        $em->flush();
-
-        return new JsonResponse(['message' => 'Usuario creado con éxito'.$user->getUser()], Response::HTTP_CREATED);
-    }
-
-    #[Route('/user/{id}', name: 'delete_user', methods: ['DELETE'])]
-    public function delete(int $id, ManagerRegistry $doctrine): JsonResponse
-    {
-        $em = $doctrine->getManager();
-        $user = $em->getRepository(User::class)->find($id);
-
-        // Verificar si el usuario existe
-        if (!$user) {
-            return new JsonResponse(['error' => 'Usuario no encontrado'], Response::HTTP_NOT_FOUND);
+        if(!$form->isValid()) {
+            $errors = $this->getErrors($form);
+            return $this->json($errors, 400);
         }
 
-        // Eliminar el usuario de la base de datos
-        $em->remove($user);
-        $em->flush();
+        $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
+        $user->setRoles(['ROLE_USER']);
+        $this->em->persist($user);
+        $this->em->flush();
 
-        return new JsonResponse(['message' => 'Usuario eliminado con éxito'], Response::HTTP_OK);
 
 
+        return $this->json([
+            'message' => 'User created successfully',
+            'user' => $user],
+        201);
     }
+
+//    #[Route('/user/{id}', name: 'delete_user', methods: ['DELETE'])]
+//    public function delete(int $id, ManagerRegistry $doctrine): JsonResponse
+//    {
+//        $em = $doctrine->getManager();
+//        $user = $em->getRepository(User::class)->find($id);
+//
+//        // Verificar si el usuario existe
+//        if (!$user) {
+//            return new JsonResponse(['error' => 'Usuario no encontrado'], Response::HTTP_NOT_FOUND);
+//        }
+//
+//        // Eliminar el usuario de la base de datos
+//        $em->remove($user);
+//        $em->flush();
+//
+//        return new JsonResponse(['message' => 'Usuario eliminado con éxito'], Response::HTTP_OK);
+//
+//
+//    }
 
 }

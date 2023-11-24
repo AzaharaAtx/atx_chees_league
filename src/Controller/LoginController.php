@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class LoginController extends AbstractController
 {
 
-    #[Route('/login_chess', name: 'api_app_login')]
+    #[Route('/login_chess', name: 'app_login')]
     public function index(ManagerRegistry $doctrine): JsonResponse
     {
         //$userFake = ['full_name' => "hola", "password" => '123'];
