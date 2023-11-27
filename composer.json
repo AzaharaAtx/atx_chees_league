@@ -13,7 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "*",
         "lexik/jwt-authentication-bundle": "^2.18",
-        "nelmio/cors-bundle": "^2.3",
+        "nelmio/cors-bundle": "*",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2",
