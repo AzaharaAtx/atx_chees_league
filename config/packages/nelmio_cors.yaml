@@ -1,0 +1,11 @@
+nelmio_cors:
+    defaults:
+        allow_credentials: true # incluye cookies y otras credenciales
+        origin_regex: true
+        allow_origin: ['%env(CORS_ALLOW_ORIGIN)%'] # ajustar para permitir solo dominios especificos
+        allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE'] # vida media cache
+        allow_headers: ['Content-Type', 'Authorization']
+        expose_headers: ['Link']
+        max_age: 3600
+    paths:
+        '^/': null # Este parámetro se puede ajustar
