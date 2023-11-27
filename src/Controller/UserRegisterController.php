@@ -44,8 +44,6 @@ class UserRegisterController extends AbstractController
         $this->em->persist($user);
         $this->em->flush();
 
-
-
         return $this->json([
             'message' => 'User created successfully',
             'user' => $user],
