@@ -36,7 +36,7 @@ class UserRegisterController extends AbstractController
 
         if(!$form->isValid()) {
             $errors = $this->getErrors($form);
-            return $this->json($errors, 400);
+            return $this->json(['errors' => $errors], 400);
         }
 
         $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
