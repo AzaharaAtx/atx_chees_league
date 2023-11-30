@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlayerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,7 +32,32 @@ class Player
     private ?\DateTimeInterface $last_seen = null;
 
     #[ORM\OneToOne(mappedBy: 'user_player', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
     private ?User $user = null;
+
+    #[ORM\OneToOne(mappedBy: 'winnerLeague', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
+    private ?League $league = null;
+
+    #[ORM\OneToOne(mappedBy: 'winnerGame', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
+    private ?Game $game = null;
+
+    #[ORM\ManyToMany(targetEntity: Round::class, mappedBy: 'id_player')]
+    private Collection $rounds;
+
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'id_player')]
+    private Collection $games;
+
+    #[ORM\ManyToMany(targetEntity: League::class, mappedBy: 'id_player')]
+    private Collection $leagues;
+
+    public function __construct()
+    {
+        $this->rounds = new ArrayCollection();
+        $this->games = new ArrayCollection();
+        $this->leagues = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -110,6 +137,153 @@ class Player
         }
 
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getLeague(): ?League
+    {
+        return $this->league;
+    }
+
+    public function setLeague(?League $league): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($league === null && $this->league !== null) {
+            $this->league->setWinnerLeague(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($league !== null && $league->getWinnerLeague() !== $this) {
+            $league->setWinnerLeague($this);
+        }
+
+        $this->league = $league;
+
+        return $this;
+    }
+
+    public function getRound(): ?Round
+    {
+        return $this->round;
+    }
+
+    public function setRound(?Round $round): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($round === null && $this->round !== null) {
+            $this->round->setWinnerRound(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($round !== null && $round->getWinnerRound() !== $this) {
+            $round->setWinnerRound($this);
+        }
+
+        $this->round = $round;
+
+        return $this;
+    }
+
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($game === null && $this->game !== null) {
+            $this->game->setWinnerGame(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($game !== null && $game->getWinnerGame() !== $this) {
+            $game->setWinnerGame($this);
+        }
+
+        $this->game = $game;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Round>
+     */
+    public function getRounds(): Collection
+    {
+        return $this->rounds;
+    }
+
+    public function addRound(Round $round): static
+    {
+        if (!$this->rounds->contains($round)) {
+            $this->rounds->add($round);
+            $round->addIdPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRound(Round $round): static
+    {
+        if ($this->rounds->removeElement($round)) {
+            $round->removeIdPlayer($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->addIdPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            $game->removeIdPlayer($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, League>
+     */
+    public function getLeagues(): Collection
+    {
+        return $this->leagues;
+    }
+
+    public function addLeague(League $league): static
+    {
+        if (!$this->leagues->contains($league)) {
+            $this->leagues->add($league);
+            $league->addIdPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeague(League $league): static
+    {
+        if ($this->leagues->removeElement($league)) {
+            $league->removeIdPlayer($this);
+        }
 
         return $this;
     }

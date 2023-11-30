@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -42,16 +44,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $last_name = null;
 
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\OneToOne(inversedBy: 'user', targetEntity: "role", cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
     private ?Role $user_role = null;
 
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
     private ?Player $user_player = null;
 
     #[ORM\Column(length: 255)]
     private ?string $full_name = null;
+
+    #[ORM\ManyToMany(targetEntity: Round::class, mappedBy: 'id_user')]
+    private Collection $rounds;
+
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'id_user')]
+    private Collection $games;
+
+    public function __construct()
+    {
+        $this->rounds = new ArrayCollection();
+        $this->games = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -215,5 +229,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUser(){
         return $this->full_name;
+    }
+
+    /**
+     * @return Collection<int, Round>
+     */
+    public function getRounds(): Collection
+    {
+        return $this->rounds;
+    }
+
+    public function addRound(Round $round): static
+    {
+        if (!$this->rounds->contains($round)) {
+            $this->rounds->add($round);
+            $round->addIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRound(Round $round): static
+    {
+        if ($this->rounds->removeElement($round)) {
+            $round->removeIdUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->addIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            $game->removeIdUser($this);
+        }
+
+        return $this;
     }
 }

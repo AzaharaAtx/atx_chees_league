@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LeagueRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,12 +15,6 @@ class League
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $id_round = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $id_user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nameLeague = null;
@@ -33,13 +29,32 @@ class League
     private ?\DateTimeInterface $startDateLeague = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $endDateLegue = null;
+    private ?\DateTimeInterface $endDateLeague = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endDateParticipate = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
+
+    #[ORM\OneToOne(inversedBy: 'league', targetEntity: "player", cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
+    private ?Player $winnerLeague = null;
+
+    #[ORM\OneToMany(mappedBy: 'id_league', targetEntity: Round::class)]
+    private Collection $rounds;
+
+    #[ORM\OneToOne(inversedBy: 'league', cascade: ['persist', 'remove'])]
+    private ?round $id_round = null;
+
+    #[ORM\ManyToMany(targetEntity: player::class, inversedBy: 'leagues')]
+    private Collection $id_player;
+
+    public function __construct()
+    {
+        $this->rounds = new ArrayCollection();
+        $this->id_player = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -118,14 +133,14 @@ class League
         return $this;
     }
 
-    public function getEndDateLegue(): ?\DateTimeInterface
+    public function getEndDateLeague(): ?\DateTimeInterface
     {
-        return $this->endDateLegue;
+        return $this->endDateLeague;
     }
 
-    public function setEndDateLegue(?\DateTimeInterface $endDateLegue): static
+    public function setEndDateLeague(?\DateTimeInterface $endDateLeague): static
     {
-        $this->endDateLegue = $endDateLegue;
+        $this->endDateLeague = $endDateLeague;
 
         return $this;
     }
@@ -150,6 +165,72 @@ class League
     public function setSoftDelete(?int $soft_delete): static
     {
         $this->soft_delete = $soft_delete;
+
+        return $this;
+    }
+
+    public function getWinnerLeague(): ?Player
+    {
+        return $this->winnerLeague;
+    }
+
+    public function setWinnerLeague(?Player $winnerLeague): static
+    {
+        $this->winnerLeague = $winnerLeague;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Round>
+     */
+    public function getRounds(): Collection
+    {
+        return $this->rounds;
+    }
+
+    public function addRound(Round $round): static
+    {
+        if (!$this->rounds->contains($round)) {
+            $this->rounds->add($round);
+            $round->setIdLeague($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRound(Round $round): static
+    {
+        if ($this->rounds->removeElement($round)) {
+            // set the owning side to null (unless already changed)
+            if ($round->getIdLeague() === $this) {
+                $round->setIdLeague(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, player>
+     */
+    public function getIdPlayer(): Collection
+    {
+        return $this->id_player;
+    }
+
+    public function addIdPlayer(player $idPlayer): static
+    {
+        if (!$this->id_player->contains($idPlayer)) {
+            $this->id_player->add($idPlayer);
+        }
+
+        return $this;
+    }
+
+    public function removeIdPlayer(player $idPlayer): static
+    {
+        $this->id_player->removeElement($idPlayer);
 
         return $this;
     }

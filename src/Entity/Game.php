@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,15 +15,6 @@ class Game
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $id_round = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $id_league = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $id_player = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeGame = null;
@@ -40,6 +33,29 @@ class Game
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
+
+    #[ORM\OneToOne(inversedBy: 'game', targetEntity: "player", cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
+    private ?Player $winnerGame = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?round $id_round = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?league $id_league = null;
+
+    #[ORM\ManyToMany(targetEntity: player::class, inversedBy: 'games')]
+    private Collection $id_player;
+
+    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'games')]
+    private Collection $id_user;
+
+    public function __construct()
+    {
+        $this->id_player = new ArrayCollection();
+        $this->id_user = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -150,6 +166,70 @@ class Game
     public function setSoftDelete(?int $soft_delete): static
     {
         $this->soft_delete = $soft_delete;
+
+        return $this;
+    }
+
+    public function getWinnerGame(): ?Player
+    {
+        return $this->winnerGame;
+    }
+
+    public function setWinnerGame(?Player $winnerGame): static
+    {
+        $this->winnerGame = $winnerGame;
+
+        return $this;
+    }
+
+    public function getRelation(): ?string
+    {
+        return $this->relation;
+    }
+
+    public function setRelation(string $relation): static
+    {
+        $this->relation = $relation;
+
+        return $this;
+    }
+
+    public function addIdPlayer(player $idPlayer): static
+    {
+        if (!$this->id_player->contains($idPlayer)) {
+            $this->id_player->add($idPlayer);
+        }
+
+        return $this;
+    }
+
+    public function removeIdPlayer(player $idPlayer): static
+    {
+        $this->id_player->removeElement($idPlayer);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, user>
+     */
+    public function getIdUser(): Collection
+    {
+        return $this->id_user;
+    }
+
+    public function addIdUser(user $idUser): static
+    {
+        if (!$this->id_user->contains($idUser)) {
+            $this->id_user->add($idUser);
+        }
+
+        return $this;
+    }
+
+    public function removeIdUser(user $idUser): static
+    {
+        $this->id_user->removeElement($idUser);
 
         return $this;
     }
