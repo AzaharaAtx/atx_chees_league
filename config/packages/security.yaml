@@ -1,6 +1,10 @@
 security:
     enable_authenticator_manager: true
 
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_SUPER_ADMIN: [ ROLE_ADMIN ]
+
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
 
@@ -26,11 +30,15 @@ security:
                 check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            login_throttling:
+                max_attempts: 3
+                interval: '15 minutes'
 
         api:
             pattern: ^/api
             stateless: true
             jwt: ~
+
 
         main:
             lazy: true
@@ -38,6 +46,10 @@ security:
             json_login:
                 # api_login is a route we will create below
                 check_path: api_login
+
+
+
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -50,7 +62,7 @@ security:
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/user/register, roles: PUBLIC_ACCESS }
-#        - { path: ^/login_chess, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 

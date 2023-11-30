@@ -29,7 +29,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Actualiza la nueva contraseña hasheada para el usuario
+     * Actualiza la nueva contraseña hasheada para el usuario, tras login
      * Used to upgrade (rehash) the user's password automatically over time.
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
