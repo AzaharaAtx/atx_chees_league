@@ -27,8 +27,8 @@ security:
             json_login:
                 username_path: email
                 #password_path: password
-                check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
-                success_handler: lexik_jwt_authentication.handler.authentication_success
+                check_path: /api/login_custom # or api_login_check as defined in config/routes.yaml
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             login_throttling:
                 max_attempts: 3
@@ -48,9 +48,6 @@ security:
                 check_path: api_login
 
 
-
-
-
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -63,7 +60,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/user/register, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/login_check, roles: IS_AUTHENTICATED_FULLY }
 
 
 when@test:

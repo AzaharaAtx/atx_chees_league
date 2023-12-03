@@ -43,6 +43,14 @@ class Player
     #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
     private ?Game $game = null;
 
+    /**
+     * @var Collection|ArrayCollection
+     * Permiten manipular, gestionar y representar las asociaciones
+     * entre entidades.
+     * https://www.doctrine-project.org/projects/doctrine-collections/en/stable/index.html#collection-methods
+     * 
+     */
+
     #[ORM\ManyToMany(targetEntity: Round::class, mappedBy: 'id_player')]
     private Collection $rounds;
 

@@ -63,7 +63,7 @@ class League
 
     public function getIdRound(): ?int
     {
-        return $this->id_round;
+        return $this->id;
     }
 
     public function setIdRound(?int $id_round): static
@@ -234,4 +234,21 @@ class League
 
         return $this;
     }
+
+    /**
+     * Obtiene el estado de la liga.
+     *
+     * @return string|null
+     */
+    public function getLeagueStatus(): ?string
+    {
+        if ($this->status === 'active' && $this->startDateLeague <= new \DateTime() && $this->endDateLeague >= new \DateTime()) {
+            return 'En curso';
+        } elseif ($this->status === 'completed') {
+            return 'Completada';
+        } else {
+            return 'Desconocido';
+        }
+    }
+
 }

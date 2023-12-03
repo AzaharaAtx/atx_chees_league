@@ -25,7 +25,7 @@ class UserRegisterController extends AbstractController
         $this->userPasswordHasher = $userPasswordHasher;
         $this->em = $em;
     }
-    #[Route('/user/register', name: 'user_register', methods: ['POST'])]
+    #[Route('api/user/register', name: 'user_register', methods: ['POST'])]
     public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -51,25 +51,5 @@ class UserRegisterController extends AbstractController
             'user' => $user],
         201);
     }
-
-//    #[Route('/user/{id}', name: 'delete_user', methods: ['DELETE'])]
-//    public function delete(int $id, ManagerRegistry $doctrine): JsonResponse
-//    {
-//        $em = $doctrine->getManager();
-//        $user = $em->getRepository(User::class)->find($id);
-//
-//        // Verificar si el usuario existe
-//        if (!$user) {
-//            return new JsonResponse(['error' => 'Usuario no encontrado'], Response::HTTP_NOT_FOUND);
-//        }
-//
-//        // Eliminar el usuario de la base de datos
-//        $em->remove($user);
-//        $em->flush();
-//
-//        return new JsonResponse(['message' => 'Usuario eliminado con éxito'], Response::HTTP_OK);
-//
-//
-//    }
 
 }

@@ -5,9 +5,9 @@ controllers:
     type: attribute
 
 # config/routes.yaml
-api_login_check:
-    path: /api/login_check
-    controller: App\Controller\LoginController::login()
+login_custom:
+    path: /api/login_custom
+    controller: App\Controller\HomeController::token
 
 
 

@@ -35,8 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $id_role = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $jwt_token = null;
+
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
@@ -44,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $last_name = null;
 
-    #[ORM\OneToOne(inversedBy: 'user', targetEntity: "role", cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'user', targetEntity: "Role", cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
     private ?Role $user_role = null;
 
@@ -60,6 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'id_user')]
     private Collection $games;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $jwt_token = null;
 
     public function __construct()
     {
@@ -283,5 +285,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function login(User $user) {
+        dump('patata');
+        exit;
     }
 }
