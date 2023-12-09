@@ -12,9 +12,10 @@ class UserDashboardController extends AbstractController
     #[Route('/user/dashboard', name: 'app_user_dashboard')]
     public function getDataLeague(): Response
     {
-        $league = new League();
-        $leagueState = $league->getLeagueStatus();
-
-        return $this->json($leagueState);
+//        $league = new League();
+//        $leagueState = $league->getLeagueStatus();
+//
+//        return $this->json($leagueState);
+        return $this->json('hola');
     }
 }

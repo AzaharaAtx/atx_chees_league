@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -29,31 +30,38 @@ class HomeController extends AbstractController
     /**
      * @param TokenStorageInterface $tokenStorage
      * @return JsonResponse
+     * @throws JWTDecodeFailureException
      */
-    public function token(ManagerRegistry $doctrine,Security $security, UserInterface $user, JWTTokenManagerInterface $JWTManager, TokenStorageInterface $tokenStorage)
+    public function token(ManagerRegistry $doctrine,
+                          Security $security,
+                          UserInterface $user,
+                          JWTTokenManagerInterface $JWTManager,
+                          TokenStorageInterface $tokenStorage
+    )
     {
         $em = $doctrine->getManager();
         // Obtén el token actual del token storage
         $token = $tokenStorage->getToken();
+        // Crea un nuevo token para el usuario actual
         $jwtToken = $JWTManager->create($user);
 
         if ($token) {
-            // Accede al token de autenticación
-//            $jwtToken = $token->JWTUserToken::getCredentials();
             try {
-
+                //Almacenamos token en BD
                 $object = $security->getUser();
 
                 $object->setJwtToken($jwtToken);
 
                 $em->persist($object);
                 $em->flush();
+
             } catch(\Exception $e) {
                 $message = $e->getMessage();
             }
 
-            // Ahora `$jwtToken` contiene el token JWT que puedes devolver o utilizar según tus necesidades.
-            return new JsonResponse(['token' => $jwtToken, 'test' => '1']);
+            $jwtRole = $token->getRoleNames();
+
+            return new JsonResponse($jwtRole);
         }
 
         // Manejar el caso en el que no se pudo obtener el token
