@@ -50,6 +50,12 @@ class Game
     #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'games')]
     private Collection $id_user;
 
+    #[ORM\ManyToOne(inversedBy: 'games')]
+    private ?Round $round = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $color = null;
+
     public function __construct()
     {
         $this->id_player = new ArrayCollection();
@@ -230,6 +236,30 @@ class Game
     public function removeIdUser(user $idUser): static
     {
         $this->id_user->removeElement($idUser);
+
+        return $this;
+    }
+
+    public function getRound(): ?Round
+    {
+        return $this->round;
+    }
+
+    public function setRound(?Round $round): static
+    {
+        $this->round = $round;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }

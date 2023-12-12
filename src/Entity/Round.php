@@ -32,10 +32,14 @@ class Round
     #[ORM\OneToOne(mappedBy: 'id_round', cascade: ['persist', 'remove'])]
     private ?League $league = null;
 
+    #[ORM\OneToMany(mappedBy: 'round', targetEntity: game::class)]
+    private Collection $games;
+
     public function __construct()
     {
         $this->id_player = new ArrayCollection();
         $this->id_user = new ArrayCollection();
+        $this->games = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -153,6 +157,36 @@ class Round
         }
 
         $this->league = $league;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->setRound($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            // set the owning side to null (unless already changed)
+            if ($game->getRound() === $this) {
+                $game->setRound(null);
+            }
+        }
 
         return $this;
     }
