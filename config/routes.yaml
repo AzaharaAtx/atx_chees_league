@@ -9,6 +9,11 @@ login_custom:
     path: /api/login_custom
     controller: App\Controller\HomeController::token
 
+# Player register
+app_player_register:
+    path: api/player/register
+    controller: App\Controller\PlayerRegisterController
+
 
 
 # Delete user

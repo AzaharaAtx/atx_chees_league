@@ -61,7 +61,7 @@ class HomeController extends AbstractController
 
             $jwtRole = $token->getRoleNames();
 
-            return new JsonResponse($jwtRole);
+            return new JsonResponse([$jwtRole, $jwtToken]);
         }
 
         // Manejar el caso en el que no se pudo obtener el token
