@@ -50,10 +50,14 @@ class League
     #[ORM\ManyToMany(targetEntity: player::class, inversedBy: 'leagues')]
     private Collection $id_player;
 
+    #[ORM\ManyToMany(targetEntity: player::class, inversedBy: 'leagues_nick')]
+    private Collection $username;
+
     public function __construct()
     {
         $this->rounds = new ArrayCollection();
         $this->id_player = new ArrayCollection();
+        $this->username = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -249,6 +253,30 @@ class League
         } else {
             return 'Desconocido';
         }
+    }
+
+    /**
+     * @return Collection<int, player>
+     */
+    public function getUsername(): Collection
+    {
+        return $this->username;
+    }
+
+    public function addUsername(player $username): static
+    {
+        if (!$this->username->contains($username)) {
+            $this->username->add($username);
+        }
+
+        return $this;
+    }
+
+    public function removeUsername(player $username): static
+    {
+        $this->username->removeElement($username);
+
+        return $this;
     }
 
 }

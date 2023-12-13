@@ -60,11 +60,15 @@ class Player
     #[ORM\ManyToMany(targetEntity: League::class, mappedBy: 'id_player')]
     private Collection $leagues;
 
+    #[ORM\ManyToMany(targetEntity: League::class, mappedBy: 'username')]
+    private Collection $leagues_nick;
+
     public function __construct()
     {
         $this->rounds = new ArrayCollection();
         $this->games = new ArrayCollection();
         $this->leagues = new ArrayCollection();
+        $this->leagues_nick = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -291,6 +295,33 @@ class Player
     {
         if ($this->leagues->removeElement($league)) {
             $league->removeIdPlayer($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, League>
+     */
+    public function getLeaguesNick(): Collection
+    {
+        return $this->leagues_nick;
+    }
+
+    public function addLeaguesNick(League $leaguesNick): static
+    {
+        if (!$this->leagues_nick->contains($leaguesNick)) {
+            $this->leagues_nick->add($leaguesNick);
+            $leaguesNick->addUsername($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeaguesNick(League $leaguesNick): static
+    {
+        if ($this->leagues_nick->removeElement($leaguesNick)) {
+            $leaguesNick->removeUsername($this);
         }
 
         return $this;
