@@ -19,16 +19,21 @@ user_list:
     path: api/user/list
     controller: App\Controller\UserRegisterController::show
 
-# Create leagyue
+ ######################
+# CRUD -> Entity League #
+ ######################
+
+# Create league
 app_league_create:
     path: api/league/create
-    controller: App\Controller\LeagueGeneratorController::create
+    controller: App\Controller\LeagueController::create
+
+# Read league
+app_league_read:
+    path: api/league/read
+    controller: App\Controller\LeagueController::read
 
 
 
 
 
-# Delete user
-#delete_user:
-#    path: /user/{id}
-#    controller: App\Controller\UserRegisterController::delete

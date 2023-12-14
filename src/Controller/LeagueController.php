@@ -11,22 +11,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LeagueGeneratorController extends AbstractController
+class LeagueController extends AbstractController
 {
-    public function __construct(EntityManagerInterface $em){
+    public function __construct(EntityManagerInterface $em, ManagerRegistry $doctrine){
         $this->em = $em;
+        $this->doctrine = $doctrine;
     }
-
-    //  CAMBIAR NOMBRE Y USAR BIENAS PRACTICAS
     #[Route('api/league/create', name: 'app_league_create', methods: ['POST'])]
     public function create(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-//        $em = $this->doctrine->getManager();
 
-        $leagueName = $data['name_league'];
+        $leagueName = $data['league_name'];
         $league = new League();
-        $league->setNameLeague($leagueName);
+
+        $league
+            ->setLeagueName($leagueName)
+            ->setStatus('Initial state');
 
         $this->em->persist($league);
         $this->em->flush();
@@ -36,26 +37,22 @@ class LeagueGeneratorController extends AbstractController
 
         return $this->json([
         'message' => 'League created successfully',
-        'league' => $league,
+        'data' => $league,
         ],
         200);
     }
 
-    private function generatePlayers(Request $request,$idLeague)
+    #[Route('api/league/read', name: 'app_league_read', methods: ['GET'])]
+    public function read(Request $request): Response
     {
-        /*$form = $this->createForm(PlayerLeagueType::class);
-        $form->handleRequest($request);
+        $leagueList = $this->doctrine
+                            ->getRepository(League::class)
+                            ->findAllLeague();
 
-        if($form->isSubmitted() && $form->isValid()) {
-            $em = $this->doctrine->getManager();
-
-            $player = $form->getData();
-            $playerLeague = new Player();
-            $playerLeague->addLeague($em->getRepository(League::class)->findBy($idLeague));
-
-
-
-        }*/
+        return $this->json([
+            'message' => 'League list recover',
+            'data' => $leagueList],
+            200);
 
     }
 }
