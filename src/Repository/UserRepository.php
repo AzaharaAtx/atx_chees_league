@@ -56,7 +56,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function selection($query, $condition, $ordenation, $limit)
     {
         // Tratar SQL y preparacion
-        $sql = $query->getQuery();
+        $sql = $query->getSQL();
         $sql = str_replace('{{conditions}}', $condition, $sql);
         $sql = str_replace('{{ordenations}}', $ordenation, $sql);
         $sql = str_replace('{{limits}}', $limit, $sql);

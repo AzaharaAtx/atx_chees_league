@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\LeagueRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,87 +14,34 @@ class League
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $nameLeague = null;
+    #[ORM\Column(length: 255)]
+    private ?string $league_name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 50)]
     private ?string $status = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $type = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $start_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $startDateLeague = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $endDateLeague = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $endDateParticipate = null;
+    private ?\DateTimeInterface $end_date = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
-
-    #[ORM\OneToOne(inversedBy: 'league', targetEntity: "player", cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
-    private ?Player $winnerLeague = null;
-
-    #[ORM\OneToMany(mappedBy: 'id_league', targetEntity: Round::class)]
-    private Collection $rounds;
-
-    #[ORM\OneToOne(inversedBy: 'league', cascade: ['persist', 'remove'])]
-    private ?round $id_round = null;
-
-    #[ORM\ManyToMany(targetEntity: player::class, inversedBy: 'leagues')]
-    private Collection $id_player;
-
-    #[ORM\ManyToMany(targetEntity: player::class, inversedBy: 'leagues_nick')]
-    private Collection $username;
-
-    public function __construct()
-    {
-        $this->rounds = new ArrayCollection();
-        $this->id_player = new ArrayCollection();
-        $this->username = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIdRound(): ?int
+    public function getLeagueName(): ?string
     {
-        return $this->id;
+        return $this->league_name;
     }
 
-    public function setIdRound(?int $id_round): static
+    public function setLeagueName(string $league_name): static
     {
-        $this->id_round = $id_round;
-
-        return $this;
-    }
-
-    public function getIdUser(): ?int
-    {
-        return $this->id_user;
-    }
-
-    public function setIdUser(?int $id_user): static
-    {
-        $this->id_user = $id_user;
-
-        return $this;
-    }
-
-    public function getNameLeague(): ?string
-    {
-        return $this->nameLeague;
-    }
-
-    public function setNameLeague(?string $nameLeague): static
-    {
-        $this->nameLeague = $nameLeague;
+        $this->league_name = $league_name;
 
         return $this;
     }
@@ -106,57 +51,33 @@ class League
         return $this->status;
     }
 
-    public function setStatus(?string $status): static
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getType(): ?string
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->type;
+        return $this->start_date;
     }
 
-    public function setType(?string $type): static
+    public function setStartDate(?\DateTimeInterface $start_date): static
     {
-        $this->type = $type;
+        $this->start_date = $start_date;
 
         return $this;
     }
 
-    public function getStartDateLeague(): ?\DateTimeInterface
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->startDateLeague;
+        return $this->end_date;
     }
 
-    public function setStartDateLeague(?\DateTimeInterface $startDateLeague): static
+    public function setEndDate(?\DateTimeInterface $end_date): static
     {
-        $this->startDateLeague = $startDateLeague;
-
-        return $this;
-    }
-
-    public function getEndDateLeague(): ?\DateTimeInterface
-    {
-        return $this->endDateLeague;
-    }
-
-    public function setEndDateLeague(?\DateTimeInterface $endDateLeague): static
-    {
-        $this->endDateLeague = $endDateLeague;
-
-        return $this;
-    }
-
-    public function getEndDateParticipate(): ?\DateTimeInterface
-    {
-        return $this->endDateParticipate;
-    }
-
-    public function setEndDateParticipate(?\DateTimeInterface $endDateParticipate): static
-    {
-        $this->endDateParticipate = $endDateParticipate;
+        $this->end_date = $end_date;
 
         return $this;
     }
@@ -172,111 +93,4 @@ class League
 
         return $this;
     }
-
-    public function getWinnerLeague(): ?Player
-    {
-        return $this->winnerLeague;
-    }
-
-    public function setWinnerLeague(?Player $winnerLeague): static
-    {
-        $this->winnerLeague = $winnerLeague;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Round>
-     */
-    public function getRounds(): Collection
-    {
-        return $this->rounds;
-    }
-
-    public function addRound(Round $round): static
-    {
-        if (!$this->rounds->contains($round)) {
-            $this->rounds->add($round);
-            $round->setIdLeague($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRound(Round $round): static
-    {
-        if ($this->rounds->removeElement($round)) {
-            // set the owning side to null (unless already changed)
-            if ($round->getIdLeague() === $this) {
-                $round->setIdLeague(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, player>
-     */
-    public function getIdPlayer(): Collection
-    {
-        return $this->id_player;
-    }
-
-    public function addIdPlayer(player $idPlayer): static
-    {
-        if (!$this->id_player->contains($idPlayer)) {
-            $this->id_player->add($idPlayer);
-        }
-
-        return $this;
-    }
-
-    public function removeIdPlayer(player $idPlayer): static
-    {
-        $this->id_player->removeElement($idPlayer);
-
-        return $this;
-    }
-
-    /**
-     * Obtiene el estado de la liga.
-     *
-     * @return string|null
-     */
-    public function getLeagueStatus(): ?string
-    {
-        if ($this->status === 'active' && $this->startDateLeague <= new \DateTime() && $this->endDateLeague >= new \DateTime()) {
-            return 'En curso';
-        } elseif ($this->status === 'completed') {
-            return 'Completada';
-        } else {
-            return 'Desconocido';
-        }
-    }
-
-    /**
-     * @return Collection<int, player>
-     */
-    public function getUsername(): Collection
-    {
-        return $this->username;
-    }
-
-    public function addUsername(player $username): static
-    {
-        if (!$this->username->contains($username)) {
-            $this->username->add($username);
-        }
-
-        return $this;
-    }
-
-    public function removeUsername(player $username): static
-    {
-        $this->username->removeElement($username);
-
-        return $this;
-    }
-
 }

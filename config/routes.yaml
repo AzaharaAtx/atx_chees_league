@@ -14,6 +14,18 @@ app_player_register:
     path: api/player/register
     controller: App\Controller\PlayerRegisterController
 
+# Show user list
+user_list:
+    path: api/user/list
+    controller: App\Controller\UserRegisterController::show
+
+# Create leagyue
+app_league_create:
+    path: api/league/create
+    controller: App\Controller\LeagueGeneratorController::create
+
+
+
 
 
 # Delete user

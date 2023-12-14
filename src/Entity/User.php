@@ -35,8 +35,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $id_role = null;
 
-
-
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
 
@@ -54,20 +52,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $full_name = null;
 
-    #[ORM\ManyToMany(targetEntity: Round::class, mappedBy: 'id_user')]
-    private Collection $rounds;
-
-    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'id_user')]
-    private Collection $games;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $jwt_token = null;
-
-    public function __construct()
-    {
-        $this->rounds = new ArrayCollection();
-        $this->games = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -231,60 +217,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUser(){
         return $this->full_name;
-    }
-
-    /**
-     * @return Collection<int, Round>
-     */
-    public function getRounds(): Collection
-    {
-        return $this->rounds;
-    }
-
-    public function addRound(Round $round): static
-    {
-        if (!$this->rounds->contains($round)) {
-            $this->rounds->add($round);
-            $round->addIdUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRound(Round $round): static
-    {
-        if ($this->rounds->removeElement($round)) {
-            $round->removeIdUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Game>
-     */
-    public function getGames(): Collection
-    {
-        return $this->games;
-    }
-
-    public function addGame(Game $game): static
-    {
-        if (!$this->games->contains($game)) {
-            $this->games->add($game);
-            $game->addIdUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGame(Game $game): static
-    {
-        if ($this->games->removeElement($game)) {
-            $game->removeIdUser($this);
-        }
-
-        return $this;
     }
 
     public function login(User $user) {

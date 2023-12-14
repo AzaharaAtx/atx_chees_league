@@ -60,6 +60,7 @@ security:
 #        - { path: '^/api/login', roles: PUBLIC_ACCESS }
         - { path: ^/user/register, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/league/create, roles: ROLE_ADMIN }
 #        - { path: ^/api/login_check, roles: IS_AUTHENTICATED_FULLY }
 
 

@@ -30,6 +30,7 @@ class UserRegisterController extends AbstractController
         $this->em = $em;
     }
 
+    // CAMBIAR NOMBRE
     #[Route('api/user/register', name: 'user_register', methods: ['POST'])]
     public function create(ManagerRegistry $doctrine,
                            TokenStorageInterface $tokenStorage,
@@ -79,6 +80,39 @@ class UserRegisterController extends AbstractController
             'user' => $user,
             'token' => $token],
             201);
+
+
+    }
+
+    #[Route('api/user/list', name: 'user_list', methods: ['GET'])]
+    public function show(ManagerRegistry $doctrine,
+                           TokenStorageInterface $tokenStorage,
+                           Security $security,
+                           JWTTokenManagerInterface $tokenManager,
+                           Request $request,
+                           UserPasswordHasherInterface $userPasswordHasher): JsonResponse
+    {
+        $userList = $doctrine->getRepository(User::class)->findAllUser();
+//        $response = json_encode($userList);
+//        $userData = [];
+
+        /*foreach ($user as $datauser) {
+            $userData[] = [
+                'id' => $datauser->getId(),
+                'full_name' => $datauser->getFullName(),
+                'email' => $datauser->getEmail(),
+                'password' => $datauser->getPassword(),
+                'roles'  => $datauser->getRoles(),
+            ];
+        }*/
+
+
+        $em = $doctrine->getManager();
+
+        return $this->json([
+            'message' => 'User list recover',
+            'data' => $userList],
+            200);
 
 
     }
