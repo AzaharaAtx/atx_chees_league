@@ -28,9 +28,6 @@ class Player
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $last_seen = null;
-
     #[ORM\OneToOne(mappedBy: 'user_player', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
     private ?User $user = null;
@@ -84,18 +81,6 @@ class Player
     public function setSoftDelete(?int $soft_delete): static
     {
         $this->soft_delete = $soft_delete;
-
-        return $this;
-    }
-
-    public function getLastSeen(): ?\DateTimeInterface
-    {
-        return $this->last_seen;
-    }
-
-    public function setLastSeen(?\DateTimeInterface $last_seen): static
-    {
-        $this->last_seen = $last_seen;
 
         return $this;
     }

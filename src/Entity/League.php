@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LeagueRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +30,17 @@ class League
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
+
+    #[ORM\OneToMany(mappedBy: 'id_league_fk', targetEntity: Round::class, orphanRemoval: true)]
+    private Collection $rounds;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $winner_league = null;
+
+    public function __construct()
+    {
+        $this->rounds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +103,48 @@ class League
     public function setSoftDelete(?int $soft_delete): static
     {
         $this->soft_delete = $soft_delete;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Round>
+     */
+    public function getRounds(): Collection
+    {
+        return $this->rounds;
+    }
+
+    public function addRound(Round $round): static
+    {
+        if (!$this->rounds->contains($round)) {
+            $this->rounds->add($round);
+            $round->setIdLeagueFk($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRound(Round $round): static
+    {
+        if ($this->rounds->removeElement($round)) {
+            // set the owning side to null (unless already changed)
+            if ($round->getIdLeagueFk() === $this) {
+                $round->setIdLeagueFk(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getWinnerLeague(): ?string
+    {
+        return $this->winner_league;
+    }
+
+    public function setWinnerLeague(?string $winner_league): static
+    {
+        $this->winner_league = $winner_league;
 
         return $this;
     }
