@@ -69,8 +69,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $result;
     }
 
-
-
     // Metodo para listar usuarios por id
     public function findUser($id)
     {

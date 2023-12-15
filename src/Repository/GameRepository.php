@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Game;
+use App\Queries\GameQuery\GameQuery;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,39 @@ class GameRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Game::class);
+    }
+
+    public function selection($query, $condition, $ordenation, $limit)
+    {
+        // Tratar SQL y preparacion
+        $sql = $query->getSQL();
+        $sql = str_replace('{{conditions}}', $condition, $sql);
+        $sql = str_replace('{{ordenations}}', $ordenation, $sql);
+        $sql = str_replace('{{limits}}', $limit, $sql);
+        $connection = $this->getEntityManager()->getConnection()->prepare($sql);
+        // Ejecuto
+        $connectionResult = $connection->executeQuery();
+        // Obtener información
+        $result = $connectionResult->fetchAllAssociative();
+
+        return $result;
+    }
+
+    // Método listado completo
+    public function findAllGame()
+    {
+        //condiciones
+        $condition  = '';
+        //ordenaciones
+        $ordenation = ' ORDER BY u.id DESC ';
+        //limites
+        $limit    = '';
+
+        $query = new GameQuery();
+        $result = $this->selection($query, $condition, $ordenation, $limit);
+
+        return $result;
+
     }
 
 //    /**

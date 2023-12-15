@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class PlayerRegisterController extends AbstractController
+class PlayerController extends AbstractController
 {
     public function __construct(EntityManagerInterface $em)
     {

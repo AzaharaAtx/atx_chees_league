@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -30,8 +29,8 @@ class UserController extends AbstractController
         $this->em = $em;
     }
 
-    // CAMBIAR NOMBRE
-    #[Route('api/user/register', name: 'user_register', methods: ['POST'])]
+    // OJO CON LAS RUTAS EN .yml CORREGIR
+    #[Route('api/user/create', name: 'user_create', methods: ['POST'])]
     public function create(ManagerRegistry $doctrine,
                            TokenStorageInterface $tokenStorage,
                            Security $security,
