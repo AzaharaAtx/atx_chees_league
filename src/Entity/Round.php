@@ -52,6 +52,7 @@ class Round
     }
 
     /**
+     * One round have many games
      * @return Collection<int, Game>
      */
     public function getGames(): Collection

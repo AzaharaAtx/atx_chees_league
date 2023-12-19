@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\League;
-use App\Queries\LeagueQuery\RoundQuery;
+use App\Queries\LeagueQuery\LeagueQuery;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -48,7 +48,7 @@ class LeagueRepository extends ServiceEntityRepository
         //limites
         $limit    = '';
 
-        $query = new RoundQuery();
+        $query = new LeagueQuery();
         $result = $this->selection($query, $condition, $ordenation, $limit);
 
         return $result;

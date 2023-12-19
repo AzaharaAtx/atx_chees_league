@@ -9,8 +9,7 @@ class PlayerQuery
                             player.id AS p_id,
                             player.username_in_chess AS p_username_in_chess,
                             player.phone AS p_status,
-                            player.soft_delete AS p_deleted,
-                            player.user AS p_user
+                            player.soft_delete AS p_deleted
                             FROM Player";
 
     // Métodos Repository Class

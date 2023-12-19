@@ -53,6 +53,5 @@ class LeagueController extends AbstractController
             'message' => 'League list recover',
             'data' => $leagueList],
             200);
-
     }
 }

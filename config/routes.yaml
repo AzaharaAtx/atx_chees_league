@@ -6,13 +6,9 @@ controllers:
 
 # config/routes.yaml
 login_custom:
-    path: /api/login_custom
+    path: /api/login_custom # CAMBAIR EL NOMBRE DE LA RUTA Q ES MU FEO
     controller: App\Controller\HomeController::token
 
-# Player register
-app_player_register:
-    path: api/player/register
-    controller: App\Controller\PlayerRegisterController
 
 # Show user list
 user_list:
@@ -32,6 +28,42 @@ app_league_create:
 app_league_read:
     path: api/league/read
     controller: App\Controller\LeagueController::read
+
+ ######################
+# CRUD -> Entity Round #
+ ######################
+
+# Create round
+app_round_create:
+    path: api/round/create
+    controller: App\Controller\RoundController::create
+
+
+# Read round
+#app_round_read:
+#    path: api/round/create
+#    controller: App\Controller\RoundController::read
+
+
+ ######################
+# CRUD -> Entity Player #
+ ######################
+
+# Player register
+app_player_register:
+    path: api/player/register
+    controller: App\Controller\PlayerController::register
+
+
+# Read player
+app_player_list:
+    path: api/player/showPJ
+    controller: App\Controller\PlayerController::showPJ
+
+# Read playerById
+app_player_list:id:
+    path: api/player/showPJId
+    controller: App\Controller\PlayerController::showPJId
 
 
 
