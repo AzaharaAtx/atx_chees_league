@@ -61,9 +61,15 @@ app_player_list:
     controller: App\Controller\PlayerController::showPJ
 
 # Read playerById
-app_player_list:id:
+app_player_list_id:
     path: api/player/showPJId
     controller: App\Controller\PlayerController::showPJId
+
+
+# Read playerById
+app_player_list_criteria:
+    path: api/player/criteria
+    controller: App\Controller\PlayerController::criteria
 
 
 

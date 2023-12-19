@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Form\PlayerRegisterType;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,9 +18,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class PlayerController extends AbstractController
 {
-    public function __construct(EntityManagerInterface $em)
+    private $em;
+    private $serializer;
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
     {
         $this->em = $em;
+        $this->serializer = $serializer;
     }
 
     #[Route('api/player/register', name: 'app_player_register', methods: ['POST'])]
@@ -50,7 +55,7 @@ class PlayerController extends AbstractController
     }
 
     #[Route('api/player/showPJId', name: 'app_player_list_id', methods: ['POST'])]
-    public function showPJId(/*ManagerRegistry $doctrine,*/ Request $request, SerializerInterface $serializer): JsonResponse
+    public function showPJId(Request $request, SerializerInterface $serializer): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -75,6 +80,30 @@ class PlayerController extends AbstractController
         $response = new JsonResponse($json, 200, [], true);
 
         return $response;
+    }
 
+    #[Route('api/player/criteria', name: 'app_player_list_criteria', methods: ['POST'])]
+    public function criteria(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['usernames'])) {
+            return new JsonResponse(['error' => 'Se requieren usernames para la consulta.'], 400);
+        }
+
+        $usernames = is_array($data['usernames']) ? $data['usernames'] : explode(',', $data['usernames']);
+        $repo = $this->em->getRepository(Player::class);
+        $queryBuilder = $repo->createQueryBuilder('p')
+            ->select('p.id')
+            ->where('p.username_in_chess IN (:usernames)')
+            ->setParameter('usernames', $usernames);
+
+        $ids = $queryBuilder
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_ARRAY);
+
+        $response = new JsonResponse($ids, 200);
+
+        return $response;
     }
 }
