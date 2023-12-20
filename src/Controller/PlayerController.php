@@ -82,6 +82,13 @@ class PlayerController extends AbstractController
         return $response;
     }
 
+    /***
+     * Hidratación:
+     *
+     * Argumento AbstractQuery::HYDRATE_ARRAY impone que los resultados se devuelvan
+     * como un array simple en lugar de objetos de entidad.
+     *
+     * */
     #[Route('api/player/criteria', name: 'app_player_list_criteria', methods: ['POST'])]
     public function criteria(Request $request)
     {

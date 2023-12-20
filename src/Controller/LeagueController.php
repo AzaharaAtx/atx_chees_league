@@ -54,4 +54,22 @@ class LeagueController extends AbstractController
             'data' => $leagueList],
             200);
     }
+    #[Route('api/league/state', name: 'app_league_state', methods: ['GET'])]
+    public function state(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $leagueName = $data['league_name'];
+
+        $league = $this->doctrine->getRepository(League::class);
+        $state = $league
+            ->findOneBy(['league_name' => $leagueName])
+            ->getStatus();
+
+        $leagueOpen = strtolower($state) === 'initial state';
+
+        return $this->json([
+            'message' => 'State league recover',
+            'data' => $leagueOpen],
+            200);
+    }
 }

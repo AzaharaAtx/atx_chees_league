@@ -29,6 +29,11 @@ app_league_read:
     path: api/league/read
     controller: App\Controller\LeagueController::read
 
+# Read league
+app_league_state:
+    path: api/league/state
+    controller: App\Controller\LeagueController::state
+
  ######################
 # CRUD -> Entity Round #
  ######################
