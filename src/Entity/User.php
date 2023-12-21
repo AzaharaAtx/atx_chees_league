@@ -55,6 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $jwt_token = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $username_in_chess = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -222,5 +225,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function login(User $user) {
         dump('patata');
         exit;
+    }
+
+    public function getUsernameInChess(): ?string
+    {
+        return $this->username_in_chess;
+    }
+
+    public function setUsernameInChess(string $username_in_chess): static
+    {
+        $this->username_in_chess = $username_in_chess;
+
+        return $this;
     }
 }

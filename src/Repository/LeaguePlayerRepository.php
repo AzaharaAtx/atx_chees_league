@@ -39,7 +39,7 @@ class LeaguePlayerRepository extends ServiceEntityRepository
     }
 
     // Método listado completo
-    public function findAllGame()
+    public function findAllParticipants()
     {
         //condiciones
         $condition  = '';

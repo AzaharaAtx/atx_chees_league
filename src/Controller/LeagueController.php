@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\League;
+use App\Entity\LeaguePlayer;
 use App\Entity\Player;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,6 +35,10 @@ class LeagueController extends AbstractController
 
         //despues de crear
         $idL = $league->getId();
+
+        $playerLeague = new LeaguePlayer();
+        $playerLeague
+            ->setIdLeagueFk($idL);
 
         return $this->json([
         'message' => 'League created successfully',
@@ -72,4 +77,29 @@ class LeagueController extends AbstractController
             'data' => $leagueOpen],
             200);
     }
+
+    #[Route('api/league/{idL}/addP/{idP}', name: 'app_league_addP', methods: ['GET'])]
+    public function addParticipants(int $idL, int $idP): Response
+    {
+        $doctrine = $this->doctrine->getManager();
+
+        $league = $doctrine->getRepository(LeaguePlayer::class)->find($idL);
+        $player = $doctrine->getRepository(Player::class)->find($idP);
+        $player = $player->getId();
+
+        if(!$league) {
+            throw $this->createNotFoundException('No se encontró la liga');
+        }
+        elseif (!$player){
+            throw $this->createNotFoundException('No se encontró al jugador');
+        }
+
+        $league->setIdPlayerFk($player);
+        $doctrine->flush();
+
+        return $this->json(['msg' => 'Jugador añadido exitosamente']);
+
+    }
+
+
 }

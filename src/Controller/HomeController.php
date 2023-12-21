@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 
-use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -13,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
 
 class HomeController extends AbstractController
 {
@@ -49,7 +47,6 @@ class HomeController extends AbstractController
             try {
                 //Almacenamos token en BD
                 $object = $security->getUser();
-
                 $object->setJwtToken($jwtToken);
 
                 $em->persist($object);
@@ -63,7 +60,6 @@ class HomeController extends AbstractController
 
             return new JsonResponse([$jwtRole/*, $jwtToken*/]);
         }
-
         // Manejar el caso en el que no se pudo obtener el token
         return new JsonResponse(['error' => 'No se pudo obtener el token'], 500);
     }

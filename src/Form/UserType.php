@@ -55,6 +55,7 @@ class UserType extends AbstractType
             ->add('full_name')
             ->add('user_role')
             ->add('user_player')
+            ->add('username_in_chess')
         ;
     }
 

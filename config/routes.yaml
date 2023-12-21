@@ -9,15 +9,29 @@ login_custom:
     path: /api/login_custom # CAMBAIR EL NOMBRE DE LA RUTA Q ES MU FEO
     controller: App\Controller\HomeController::token
 
+ #######################
+# CRUD -> Entity User #
+#######################
 
 # Show user list
 user_list:
     path: api/user/list
     controller: App\Controller\UserRegisterController::show
 
- ######################
+# Read playerById
+app_user_list_id:
+    path: api/user/api/user/showUId
+    controller: App\Controller\UserController::api/user/showUId
+
+
+# Read playerById
+app_user_list_criteria:
+    path: api/user/criteria
+    controller: App\Controller\UserController::criteria
+
+ ########################
 # CRUD -> Entity League #
- ######################
+########################
 
 # Create league
 app_league_create:
@@ -34,9 +48,9 @@ app_league_state:
     path: api/league/state
     controller: App\Controller\LeagueController::state
 
- ######################
+ #######################
 # CRUD -> Entity Round #
- ######################
+#######################
 
 # Create round
 app_round_create:
@@ -50,9 +64,9 @@ app_round_create:
 #    controller: App\Controller\RoundController::read
 
 
- ######################
+ ########################
 # CRUD -> Entity Player #
- ######################
+########################
 
 # Player register
 app_player_register:

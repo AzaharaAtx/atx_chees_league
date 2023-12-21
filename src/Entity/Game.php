@@ -26,11 +26,19 @@ class Game
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Player $white_player_fk = null;
+    private ?User $white_player_fk = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Player $black_player_fk = null;
+    private ?User $black_player_fk = null;
+
+//    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+//    #[ORM\JoinColumn(nullable: false)]
+//    private ?Player $white_player_fk = null;
+//
+//    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+//    #[ORM\JoinColumn(nullable: false)]
+//    private ?Player $black_player_fk = null;
 
     public function getId(): ?int
     {
@@ -72,28 +80,52 @@ class Game
 
         return $this;
     }
+//
+//    public function getWhitePlayerFk(): ?Player
+//    {
+//        return $this->white_player_fk;
+//    }
+//
+//    public function setWhitePlayerFk(Player $white_player_fk): static
+//    {
+//        $this->white_player_fk = $white_player_fk;
+//
+//        return $this;
+//    }
+//
+//    public function getBlackPlayerFk(): ?Player
+//    {
+//        return $this->black_player_fk;
+//    }
+//
+//    public function setBlackPlayerFk(Player $black_player_fk): static
+//    {
+//        $this->black_player_fk = $black_player_fk;
+//
+//        return $this;
+//    }
 
-    public function getWhitePlayerFk(): ?Player
-    {
-        return $this->white_player_fk;
-    }
+public function getWhitePlayerFk(): ?User
+{
+    return $this->white_player_fk;
+}
 
-    public function setWhitePlayerFk(Player $white_player_fk): static
-    {
-        $this->white_player_fk = $white_player_fk;
+public function setWhitePlayerFk(?User $white_player_fk): static
+{
+    $this->white_player_fk = $white_player_fk;
 
-        return $this;
-    }
+    return $this;
+}
 
-    public function getBlackPlayerFk(): ?Player
-    {
-        return $this->black_player_fk;
-    }
+public function getBlackPlayerFk(): ?User
+{
+    return $this->black_player_fk;
+}
 
-    public function setBlackPlayerFk(Player $black_player_fk): static
-    {
-        $this->black_player_fk = $black_player_fk;
+public function setBlackPlayerFk(?User $black_player_fk): static
+{
+    $this->black_player_fk = $black_player_fk;
 
-        return $this;
-    }
+    return $this;
+}
 }

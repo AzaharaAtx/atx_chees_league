@@ -32,9 +32,7 @@ class LeaguePlayer
     private ?int $ties_number = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Player $id_player_fk = null;
-
+    private ?User $id_user_fk = null;
 
     public function getId(): ?int
     {
@@ -101,14 +99,14 @@ class LeaguePlayer
         return $this;
     }
 
-    public function getIdPlayerFk(): ?Player
+    public function getIdUserFk(): ?User
     {
-        return $this->id_player_fk;
+        return $this->id_user_fk;
     }
 
-    public function setIdPlayerFk(?Player $id_player_fk): static
+    public function setIdUserFk(?User $id_user_fk): static
     {
-        $this->id_player_fk = $id_player_fk;
+        $this->id_user_fk = $id_user_fk;
 
         return $this;
     }
