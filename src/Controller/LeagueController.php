@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class LeagueController extends AbstractController
 {
@@ -75,6 +76,20 @@ class LeagueController extends AbstractController
         return $this->json([
             'message' => 'State league recover',
             'data' => $leagueOpen],
+            200);
+    }
+
+    #[Route('api/league/view_open_league', name: 'app_league_open_league', methods: ['GET'])]
+    public function viewOpenLeague(Request $request, SerializerInterface $serializer): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $league = $this->doctrine->getRepository(League::class)->findBy(['status' => 'Initial state']);
+        $json = $serializer->serialize($league, 'json');
+
+        return $this->json([
+            /*'message' => 'Open leagues',
+            'data' => */$json],
             200);
     }
 

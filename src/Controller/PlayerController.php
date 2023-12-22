@@ -77,9 +77,8 @@ class PlayerController extends AbstractController
                 ->getResult();
 
         $json = $serializer->serialize($result, 'json');
-        $response = new JsonResponse($json, 200, [], true);
 
-        return $response;
+        return new JsonResponse($json, 200, [], true);
     }
 
     /***
