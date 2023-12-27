@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\Entity\League;
 use App\Entity\LeaguePlayer;
 use App\Entity\Player;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,10 +39,6 @@ class LeagueController extends AbstractController
 
         //despues de crear
         $idL = $league->getId();
-
-        $playerLeague = new LeaguePlayer();
-        $playerLeague
-            ->setIdLeagueFk($idL);
 
         return $this->json([
         'message' => 'League created successfully',
@@ -93,27 +92,28 @@ class LeagueController extends AbstractController
             200);
     }
 
-    #[Route('api/league/{idL}/addP/{idP}', name: 'app_league_addP', methods: ['GET'])]
-    public function addParticipants(int $idL, int $idP): Response
+    #[Route('api/league/enroll/{id}', name: 'app_league_enroll', methods: ['POST'])]
+    public function enroll(int $id, Request $request, Security$security): JsonResponse
     {
         $doctrine = $this->doctrine->getManager();
+        $em = $this->em;
+        $user = $security->getUser();
 
-        $league = $doctrine->getRepository(LeaguePlayer::class)->find($idL);
-        $player = $doctrine->getRepository(Player::class)->find($idP);
-        $player = $player->getId();
+        $league = $doctrine->getRepository(League::class)->find($id);
 
-        if(!$league) {
-            throw $this->createNotFoundException('No se encontró la liga');
-        }
-        elseif (!$player){
-            throw $this->createNotFoundException('No se encontró al jugador');
+        if (!$league) {
+            return new JsonResponse(['message' => 'League not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        $league->setIdPlayerFk($player);
-        $doctrine->flush();
+        $player_league = new LeaguePlayer();
+        $player_league
+            ->setIdLeagueFk($league)
+            ->setIdUserFk($user);
 
-        return $this->json(['msg' => 'Jugador añadido exitosamente']);
+        $em->persist($player_league);
+        $em->flush();
 
+        return $this->json([$user, 'msg' => 'Jugador añadido exitosamente']);
     }
 
 
