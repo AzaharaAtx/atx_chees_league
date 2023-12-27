@@ -78,8 +78,8 @@ class LeagueController extends AbstractController
             200);
     }
 
-    #[Route('api/league/view_open_league', name: 'app_league_open_league', methods: ['GET'])]
-    public function viewOpenLeague(Request $request, SerializerInterface $serializer): Response
+    #[Route('api/league/view_init_league', name: 'app_league_init_league', methods: ['GET'])]
+    public function viewInitLeague(Request $request, SerializerInterface $serializer): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -114,6 +114,20 @@ class LeagueController extends AbstractController
         $em->flush();
 
         return $this->json([$user, 'msg' => 'Jugador añadido exitosamente']);
+    }
+
+    #[Route('api/league/view_open_league', name: 'app_league_open_league', methods: ['GET'])]
+    public function viewOpenLeague(Request $request, SerializerInterface $serializer): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $league = $this->doctrine->getRepository(League::class)->findBy(['status' => 'Open']);
+        $json = $serializer->serialize($league, 'json');
+
+        return $this->json([
+            /*'message' => 'Open leagues',
+            'data' => */$json],
+            200);
     }
 
 
