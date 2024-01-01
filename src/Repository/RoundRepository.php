@@ -44,7 +44,7 @@ class RoundRepository extends ServiceEntityRepository
         //condiciones
         $condition  = '';
         //ordenaciones
-        $ordenation = ' ORDER BY u.id DESC ';
+        $ordenation = ' ORDER BY r.id DESC ';
         //limites
         $limit    = '';
 

@@ -7,10 +7,10 @@ class GameQuery
     // Queries preconfiguradas
     const SQL_GENERIC = "SELECT
                             game.id AS g_id,
-                            game.id_round_fk AS g_name_league,
+                            game.id_round_fk_id AS g_round_fk_id,
                             game.status AS g_status,
-                            game.white_player_fk AS g_white_player_fk,
-                            game.black_player_fk AS g_black_player_fk,
+                            game.white_player_fk_id AS g_white_player_fk,
+                            game.black_player_fk_id AS g_black_player_fk,
                             game.soft_delete AS g_deleted
                             FROM Game";
 

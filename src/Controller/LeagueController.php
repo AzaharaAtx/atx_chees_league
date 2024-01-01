@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\League;
 use App\Entity\LeaguePlayer;
-use App\Entity\Player;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -78,7 +76,7 @@ class LeagueController extends AbstractController
             200);
     }
 
-    #[Route('api/league/view_init_league', name: 'app_league_init_league', methods: ['GET'])]
+    #[Route('api/league/view/init/league', name: 'app_league_init_league', methods: ['GET'])]
     public function viewInitLeague(Request $request, SerializerInterface $serializer): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -86,10 +84,7 @@ class LeagueController extends AbstractController
         $league = $this->doctrine->getRepository(League::class)->findBy(['status' => 'Initial state']);
         $json = $serializer->serialize($league, 'json');
 
-        return $this->json([
-            /*'message' => 'Open leagues',
-            'data' => */$json],
-            200);
+        return $this->json([$json], 200);
     }
 
     #[Route('api/league/enroll/{id}', name: 'app_league_enroll', methods: ['POST'])]
@@ -116,7 +111,7 @@ class LeagueController extends AbstractController
         return $this->json([$user, 'msg' => 'Jugador añadido exitosamente']);
     }
 
-    #[Route('api/league/view_open_league', name: 'app_league_open_league', methods: ['GET'])]
+    #[Route('api/league/view/open/league', name: 'app_league_open_league', methods: ['GET'])]
     public function viewOpenLeague(Request $request, SerializerInterface $serializer): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -124,11 +119,7 @@ class LeagueController extends AbstractController
         $league = $this->doctrine->getRepository(League::class)->findBy(['status' => 'Open']);
         $json = $serializer->serialize($league, 'json');
 
-        return $this->json([
-            /*'message' => 'Open leagues',
-            'data' => */$json],
-            200);
+        return $this->json([$json],200);
     }
-
 
 }

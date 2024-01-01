@@ -6,6 +6,7 @@ use App\Repository\LeaguePlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: LeaguePlayerRepository::class)]
 class LeaguePlayer
@@ -17,6 +18,7 @@ class LeaguePlayer
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[MaxDepth(2)]
     private ?League $id_league_fk = null;
 
     #[ORM\Column(nullable: true)]
@@ -32,6 +34,7 @@ class LeaguePlayer
     private ?int $ties_number = null;
 
     #[ORM\ManyToOne]
+    #[MaxDepth(1)]
     private ?User $id_user_fk = null;
 
     public function getId(): ?int

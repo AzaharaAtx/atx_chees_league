@@ -45,12 +45,12 @@ app_league_read:
 
 # Read 'Initial state' league
 app_league_init_league:
-    path: api/league/view_init_league
+    path: api/league/view/init/league
     controller: App\Controller\LeagueController::viewInitLeague
 
 # Read open league
 app_league_open_league:
-    path: api/league/view_open_league
+    path: api/league/view/open/league
     controller: App\Controller\LeagueController::viewOpenLeague
 
 # Read state league
@@ -69,16 +69,20 @@ app_league_enroll:
 # CRUD -> Entity Round #
 #######################
 
-# Create round
-app_round_create:
-    path: api/round/create
-    controller: App\Controller\RoundController::create
+# Read rounds&games created
+app_show_create_rounds_games:
+    path: api/show/create/rounds&games
+    controller: App\Controller\RoundController::showRoundNDGames
 
+# Read participants in league
+app_league_participants:
+    path: api/round/show/players/leagues
+    controller: App\Controller\RoundController::show
 
 # Read round
-#app_round_read:
-#    path: api/round/create
-#    controller: App\Controller\RoundController::read
+app_league_round_create:
+    path: api/league/round/create/{id}
+    controller: App\Controller\RoundController::create
 
 
  ########################

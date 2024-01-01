@@ -7,10 +7,9 @@ class RoundQuery
     // Queries preconfiguradas
     const SQL_GENERIC = "SELECT
                             round.id AS r_id,
-                            round.id_league_fk AS r_id_league_fk,
-                            round.games AS r_game,
-                            round.status AS r_status,
                             round.soft_delete AS r_soft_delete,
+                            round.id_league_fk_id AS r_id_league_fk,
+                            round.round_number AS r_round_number
                             FROM Round";
 
     // Métodos Repository Class
