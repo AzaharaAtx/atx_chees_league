@@ -11,10 +11,12 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function Sodium\add;
 
 class ChessRounds
 {
     private EntityManagerInterface $em;
+    private ManagerRegistry $doctrine;
 
     public function __construct (EntityManagerInterface $em, ManagerRegistry $doctrine)
     {
@@ -31,44 +33,50 @@ class ChessRounds
         }
 
         $numPlayers = count($players);
-        $numRounds = $numPlayers - 1;
 
-        for ($roundNumber = 1; $roundNumber <= $numRounds; $roundNumber++) {
+        if($numPlayers % 2 != 0) {
+            $dummyPlayer = 'empty';
+            $players[] = $dummyPlayer;
+        }
+
+        $rounds = $this->generateRotationFixture($players, $league);
+
+        foreach ($rounds as $round) {
+            $this->em->persist($round);
+            foreach ($round->getGames() as $game) {
+                $this->em->persist($game);
+            }
+        }
+
+        $this->em->flush();
+    }
+
+    private function generateRotationFixture(array $users, League $league): array
+    {
+        $numUsers = count($users);
+        $rounds = [];
+
+        $league = $this->doctrine->getRepository(League::class)->find($league);
+
+        for ($roundNumber = 1; $roundNumber < $numUsers; $roundNumber++) {
             $round = new Round();
             $round->setRoundNumber($roundNumber);
             $round->setIdLeagueFk($league);
-            $this->em->persist($round);
 
-            $group1 = array_slice($players, 0, $numPlayers / 2);
-            $group2 = array_slice($players, $numPlayers / 2);
-
-            for ($matchNumber = 1; $matchNumber <= $numPlayers / 2; $matchNumber++) {
-                $player1 = $group1[$matchNumber - 1];
-                $player2 = $group2[$matchNumber - 1];
-                // Evitar emparejamiento consigo mismo
-//                    if ($player1 !== $player2) {
-//                        // Verificar si ya existe un juego con estos jugadores
-//                        $existingGame = $this->doctrine->getRepository(Game::class)->findOneBy([
-//                            'id_round_fk' => $round,
-//                            'white_player_fk' => $player1,
-//                            'black_player_fk' => $player2,
-//                        ]);
-
-//                        if (!$existingGame) {
-                            // Crea el nuevo juego solo si no existe ya
-                            $match = new Game();
-                            $match->setStatus('Pending');
-                            $match->setIdRoundFk($round);
-                            $match->setWhitePlayerFk($player1);
-                            $match->setBlackPlayerFk($player2);
-                            $this->em->persist($match);
-                            $this->em->flush();
-                        //}
-                    //}
+            for ($i = 0; $i < $numUsers / 2; $i++) {
+                $game = new Game();
+                $game->setIdRoundFk($round);
+                $game->setStatus('Pending');
+                $game->setWhitePlayerFk($users[$i]);
+                $game->setBlackPlayerFk($users[$numUsers - 1 - $i]);
+                $round->addGame($game);
             }
-            $group2[] = array_shift($group1);
-            array_unshift($group1, array_pop($group2));
+
+            $rounds[] = $round;
+            // Rotar los usuarios para la siguiente ronda
+            array_push($users, array_shift($users));
         }
-        $this->em->flush();
+
+        return $rounds;
     }
 }
