@@ -100,6 +100,13 @@ class LeagueController extends AbstractController
             return new JsonResponse(['message' => 'League not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
+        $existingEnrollment = $doctrine->getRepository(LeaguePlayer::class)
+            ->findOneBy(['id_league_fk' => $league, 'id_user_fk' => $user]);
+
+        if ($existingEnrollment) {
+            return new JsonResponse(['message' => 'User already enrolled in the league'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
         $player_league = new LeaguePlayer();
         $player_league
             ->setIdLeagueFk($league)
@@ -108,7 +115,7 @@ class LeagueController extends AbstractController
         $em->persist($player_league);
         $em->flush();
 
-        return $this->json([$user, 'msg' => 'Jugador añadido exitosamente']);
+        return $this->json([$user, 'message' => 'Jugador añadido exitosamente']);
     }
 
     #[Route('api/league/view/open/league', name: 'app_league_open_league', methods: ['GET'])]

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -58,9 +59,17 @@ class HomeController extends AbstractController
 
             $jwtRole = $token->getRoleNames();
             $id = $token->getUserIdentifier();
+            $name_chess = $doctrine
+                ->getRepository(User::class)
+                ->find($id)
+                ->getUsernameInChess();
+            $name = $doctrine
+                ->getRepository(User::class)
+                ->find($id)
+                ->getFullName();
 
 
-            return new JsonResponse([$jwtRole, $id,$jwtToken]);
+            return new JsonResponse([$jwtRole, $id, $jwtToken, $name, $name_chess]);
         }
         // Manejar el caso en el que no se pudo obtener el token
         return new JsonResponse(['error' => 'No se pudo obtener el token'], 500);
