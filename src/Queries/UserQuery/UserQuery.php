@@ -6,12 +6,14 @@ class UserQuery
 {
     // Queries preconfiguradas
     const SQL_GENERIC = "SELECT
-                            user.id AS u_id,
-                            user.email AS u_email,
-                            user.roles AS u_roles,
-                            user.user_player_id AS u_user_player_id,
-                            user.full_name AS u_full_name,
-                            user.last_name AS u_last_name
+                            user.id AS id,
+                            user.email AS email,
+                            user.roles AS roles,
+                            user.full_name AS full_name,
+                            user.last_name AS last_name,
+                            user.password AS password,
+                            user.username_in_chess AS username_in_chess,
+                            user.jwt_token AS token
                             FROM user";
 
     // Métodos Repository Class

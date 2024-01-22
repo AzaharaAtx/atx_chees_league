@@ -28,9 +28,9 @@ class Player
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
 
-    #[ORM\OneToOne(mappedBy: 'user_player', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
-    private ?User $user = null;
+//    #[ORM\OneToOne(mappedBy: 'user_player', cascade: ['persist', 'remove'])]
+//    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
+//    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -84,22 +84,22 @@ class Player
 
         return $this;
     }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): static
-    {
-        // set the owning side of the relation if necessary
-        if ($user->getUserPlayer() !== $this) {
-            $user->setUserPlayer($this);
-        }
-
-        $this->user = $user;
-
-        return $this;
-    }
+//
+//    public function getUser(): ?User
+//    {
+//        return $this->user;
+//    }
+//
+//    public function setUser(User $user): static
+//    {
+//        // set the owning side of the relation if necessary
+//        if ($user->getUserPlayer() !== $this) {
+//            $user->setUserPlayer($this);
+//        }
+//
+//        $this->user = $user;
+//
+//        return $this;
+//    }
 
 }

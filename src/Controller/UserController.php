@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Player;
 use App\Entity\User;
-use App\Form\PlayerRegisterType;
 use App\Form\UserType;
 use App\Trait\WithFormErrors;
 use Doctrine\ORM\AbstractQuery;
@@ -27,10 +25,11 @@ class UserController extends AbstractController
     private UserPasswordHasherInterface $userPasswordHasher;
 
     //Inyectamos la interfaaz para hashear la contraseña
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em)
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em, ManagerRegistry $doctrine)
     {
         $this->userPasswordHasher = $userPasswordHasher;
         $this->em = $em;
+        $this->doctrine = $doctrine;
     }
 
     // OJO CON LAS RUTAS EN .yml CORREGIR
@@ -82,17 +81,53 @@ class UserController extends AbstractController
             201);
     }
 
-    #[Route('api/user/show', name: 'user_list', methods: ['GET'])]
-    public function show(ManagerRegistry $doctrine, Request $request): JsonResponse
+    #[Route('api/user/list', name: 'user_list', methods: ['GET'])]
+    public function list(ManagerRegistry $doctrine, Request $request): JsonResponse
     {
         $userList = $doctrine->getRepository(User::class)->findAllUser();
 
         $em = $doctrine->getManager();
 
-        return $this->json([
-            'message' => 'User list recover',
-            'data' => $userList],
-            200);
+        return $this->json($userList,200);
+    }
+
+    #[Route('/api/user/{id}', name: 'edit_user', methods: ['PUT'])]
+    public function edit(Request $request,Security $security, int $id, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
+    {
+        $doctrine = $this->doctrine->getManager();
+        $em = $this->em;
+        $user = $doctrine->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            return $this->json(['error' => 'Usuario no encontrado.'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['full_name'])) {
+            $user->setFullName($data['full_name']);
+        }
+
+        if (isset($data['last_name'])) {
+            $user->setLastName($data['last_name']);
+        }
+
+        if (isset($data['password'])) {
+            $encodedPassword = $userPasswordHasher->hashPassword($user, $data['password']);
+            $user->setPassword($encodedPassword);
+        }
+
+        if (isset($data['username_in_chess'])) {
+            $user->setUsernameInChess($data['username_in_chess']);
+        }
+
+        if (isset($data['roles'])) {
+            $user->setRoles($data['roles']);
+        }
+
+        $doctrine->flush();
+
+        return $this->json(['message' => 'Usuario actualizado con éxito.'], 200);
     }
 
     #[Route('api/user/showUId', name: 'app_user_list_id', methods: ['POST'])]

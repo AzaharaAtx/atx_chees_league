@@ -48,13 +48,9 @@ class UserType extends AbstractType
                 ]
             ])
 
-            ->add('id_role')
             ->add('jwt_token')
-            ->add('soft_delete')
             ->add('last_name')
             ->add('full_name')
-            ->add('user_role')
-            ->add('user_player')
             ->add('username_in_chess')
         ;
     }

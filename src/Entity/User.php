@@ -32,22 +32,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $id_role = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $soft_delete = null;
-
     #[ORM\Column(length: 255)]
     private ?string $last_name = null;
-
-    #[ORM\OneToOne(inversedBy: 'user', targetEntity: "Role", cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
-    private ?Role $user_role = null;
-
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(referencedColumnName: "id", nullable: true)]
-    private ?Player $user_player = null;
 
     #[ORM\Column(length: 255)]
     private ?string $full_name = null;
@@ -128,18 +114,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getIdRole(): ?int
-    {
-        return $this->id_role;
-    }
-
-    public function setIdRole(?int $id_role): static
-    {
-        $this->id_role = $id_role;
-
-        return $this;
-    }
-
     public function getJwtToken(): ?string
     {
         return $this->jwt_token;
@@ -152,18 +126,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSoftDelete(): ?int
-    {
-        return $this->soft_delete;
-    }
-
-    public function setSoftDelete(?int $soft_delete): static
-    {
-        $this->soft_delete = $soft_delete;
-
-        return $this;
-    }
-
     public function getLastName(): ?string
     {
         return $this->last_name;
@@ -172,30 +134,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $last_name): static
     {
         $this->last_name = $last_name;
-
-        return $this;
-    }
-
-    public function getUserRole(): ?Role
-    {
-        return $this->user_role;
-    }
-
-    public function setUserRole(Role $user_role): static
-    {
-        $this->user_role = $user_role;
-
-        return $this;
-    }
-
-    public function getUserPlayer(): ?Player
-    {
-        return $this->user_player;
-    }
-
-    public function setUserPlayer(Player $user_player): static
-    {
-        $this->user_player = $user_player;
 
         return $this;
     }
@@ -221,11 +159,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUser(){
         return $this->full_name;
     }
-
-    public function login(User $user) {
-        dump('patata');
-        exit;
-    }
+//
+//    public function login(User $user) {
+//        dump('patata');
+//        exit;
+//    }
 
     public function getUsernameInChess(): ?string
     {

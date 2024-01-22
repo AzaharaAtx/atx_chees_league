@@ -16,18 +16,30 @@ login_custom:
 # Show user list
 user_list:
     path: api/user/list
-    controller: App\Controller\UserRegisterController::show
+    controller: App\Controller\UserController::list
 
-# Read playerById
+# Show user list
+user_create:
+    path: api/user/create
+    controller: App\Controller\UserController::create
+
+# Read user by Id
 app_user_list_id:
     path: api/user/api/user/showUId
     controller: App\Controller\UserController::api/user/showUId
 
 
-# Read playerById
+# Read user by criteria
 app_user_list_criteria:
     path: api/user/criteria
     controller: App\Controller\UserController::criteria
+
+# Edit user
+edit_user:
+    path: /api/user/{id}
+    controller: App\Controller\UserController::edit
+
+
 
  ########################
 # CRUD -> Entity League #
