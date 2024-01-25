@@ -6,11 +6,12 @@ class LeagueQuery
 {
     // Queries preconfiguradas
     const SQL_GENERIC = "SELECT
-                            league.id AS l_id,
-                            league.league_name AS l_name_league,
-                            league.status AS l_status,
-                            league.start_date AS l_start_date,
-                            league.end_date AS l_end_date
+                            league.id AS id,
+                            league.league_name AS name_league,
+                            league.status AS status,
+                            league.start_date AS start_date,
+                            league.end_date AS end_date,
+                            league.winner_league as winner_league
                             FROM League";
 
     // Métodos Repository Class

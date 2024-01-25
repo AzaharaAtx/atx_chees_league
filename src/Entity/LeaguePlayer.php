@@ -18,7 +18,6 @@ class LeaguePlayer
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[MaxDepth(2)]
     private ?League $id_league_fk = null;
 
     #[ORM\Column(nullable: true)]

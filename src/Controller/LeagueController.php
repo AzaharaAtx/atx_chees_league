@@ -52,10 +52,7 @@ class LeagueController extends AbstractController
                             ->getRepository(League::class)
                             ->findAllLeague();
 
-        return $this->json([
-            'message' => 'League list recover',
-            'data' => $leagueList],
-            200);
+        return $this->json($leagueList,200);
     }
     #[Route('api/league/state', name: 'app_league_state', methods: ['GET'])]
     public function state(Request $request): Response
@@ -88,7 +85,7 @@ class LeagueController extends AbstractController
     }
 
     #[Route('api/league/enroll/{id}', name: 'app_league_enroll', methods: ['POST'])]
-    public function enroll(int $id, Request $request, Security$security): JsonResponse
+    public function enroll(int $id, Request $request, Security $security): JsonResponse
     {
         $doctrine = $this->doctrine->getManager();
         $em = $this->em;
@@ -127,6 +124,50 @@ class LeagueController extends AbstractController
         $json = $serializer->serialize($league, 'json');
 
         return $this->json([$json],200);
+    }
+    #[Route('api/league/view/close/league', name: 'app_league_close_league', methods: ['GET'])]
+    public function viewClosedLeagues(Request $request, SerializerInterface $serializer): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $league = $this->doctrine->getRepository(League::class)->findBy(['status' => 'Close']);
+        $json = $serializer->serialize($league, 'json');
+
+        return $this->json([$json],200);
+    }
+
+    #[Route('api/league/view/edit/league/{id}', name: 'app_league_edit_league', methods: ['PUT'])]
+    public function editLeague(Request $request, SerializerInterface $serializer, int $id): Response
+    {
+        $doctrine = $this->doctrine->getManager();
+        $em = $this->em;
+        $league = $doctrine->getRepository(League::class)->find($id);
+
+        if (!$league) {
+            return $this->json(['error' => 'Liga no encontrada.'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['status'])) {
+            $league->setStatus($data['status']);
+        }
+
+        if (isset($data['start_date'])) {
+            $league->setStartDate(new \DateTime($data['start_date']));
+        }
+
+        if (isset($data['end_date'])) {
+            $league->setEndDate(new \DateTime($data['end_date']));
+        }
+
+        if (isset($data['winner_league'])) {
+            $league->setWinnerLeague($data['winner_league']);
+        }
+
+        $doctrine->flush();
+
+        return $this->json(['msg' => 'Liga actualizada con exito'],200);
     }
 
 }

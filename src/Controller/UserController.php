@@ -91,8 +91,63 @@ class UserController extends AbstractController
         return $this->json($userList,200);
     }
 
-    #[Route('/api/user/{id}', name: 'edit_user', methods: ['PUT'])]
-    public function edit(Request $request,Security $security, int $id, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
+    #[Route('api/user/profile', name: 'user_profile', methods: ['GET'])]
+    public function userId(ManagerRegistry $doctrine, Request $request, Security $security): JsonResponse
+    {
+        $user = $security->getUser();
+
+        if (!$user) {
+            throw $this->createNotFoundException('Usuario no encontrado');
+        }
+
+        return $this->json($user,200);
+    }
+
+    #[Route('/api/user', name: 'edit_user', methods: ['PUT'])]
+    public function edit(Request $request,Security $security, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
+    {
+        $doctrine = $this->doctrine->getManager();
+        $em = $this->em;
+        $id = $security->getUser();
+        $user = $doctrine->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            return $this->json(['error' => 'Usuario no encontrado.'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['full_name'])) {
+            $user->setFullName($data['full_name']);
+        }
+
+        if (isset($data['last_name'])) {
+            $user->setLastName($data['last_name']);
+        }
+
+        if (isset($data['password'])) {
+            $encodedPassword = $userPasswordHasher->hashPassword($user, $data['password']);
+            $user->setPassword($encodedPassword);
+        }
+
+        if (isset($data['username_in_chess'])) {
+            $user->setUsernameInChess($data['username_in_chess']);
+        }
+
+        if (isset($data['friend_link'])) {
+            $user->setFriendLink($data['friend_link']);
+        }
+
+        if (isset($data['phone'])) {
+            $user->setPhone($data['phone']);
+        }
+
+        $doctrine->flush();
+
+        return $this->json(['message' => 'Usuario actualizado con éxito.'], 200);
+    }
+    #[Route('/api/user/{id}', name: 'edit_my_user', methods: ['PUT'])]
+    public function editById(Request $request,int $id, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
         $doctrine = $this->doctrine->getManager();
         $em = $this->em;
@@ -121,8 +176,12 @@ class UserController extends AbstractController
             $user->setUsernameInChess($data['username_in_chess']);
         }
 
-        if (isset($data['roles'])) {
-            $user->setRoles($data['roles']);
+        if (isset($data['friend_link'])) {
+            $user->setFriendLink($data['friend_link']);
+        }
+
+        if (isset($data['phone'])) {
+            $user->setPhone($data['phone']);
         }
 
         $doctrine->flush();

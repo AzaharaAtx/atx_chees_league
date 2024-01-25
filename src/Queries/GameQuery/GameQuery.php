@@ -6,12 +6,11 @@ class GameQuery
 {
     // Queries preconfiguradas
     const SQL_GENERIC = "SELECT
-                            game.id AS g_id,
-                            game.id_round_fk_id AS g_round_fk_id,
-                            game.status AS g_status,
-                            game.white_player_fk_id AS g_white_player_fk,
-                            game.black_player_fk_id AS g_black_player_fk,
-                            game.soft_delete AS g_deleted
+                            game.id AS id,
+                            game.id_round_fk_id AS round_fk_id,
+                            game.status AS status,
+                            game.white_player_fk_id AS white_player_fk,
+                            game.black_player_fk_id AS black_player_fk
                             FROM Game";
 
     // Métodos Repository Class

@@ -23,6 +23,11 @@ user_create:
     path: api/user/create
     controller: App\Controller\UserController::create
 
+# Show user profile
+user_profile:
+    path: api/user/profile
+    controller: App\Controller\UserController::userId
+
 # Read user by Id
 app_user_list_id:
     path: api/user/api/user/showUId
@@ -37,9 +42,12 @@ app_user_list_criteria:
 # Edit user
 edit_user:
     path: /api/user/{id}
+    controller: App\Controller\UserController::editById
+
+# Edit my user
+edit_my_user:
+    path: /api/user
     controller: App\Controller\UserController::edit
-
-
 
  ########################
 # CRUD -> Entity League #
@@ -75,6 +83,10 @@ app_league_enroll:
     path: api/league/enroll/{id}
     controller: App\Controller\LeagueController::enroll
 
+# Edit league
+app_league_edit_league:
+    path: api/league/view/edit/league/{id}
+    controller: App\Controller\LeagueController::editLeague
 
 
  #######################
@@ -86,44 +98,30 @@ app_show_create_rounds_games:
     path: api/show/create/rounds&games
     controller: App\Controller\RoundController::showRoundNDGames
 
+# Read myleagues
+app_league_participate:
+    path: api/show/my/leagues
+    controller: App\Controller\RoundController::showMe
+
 # Read participants in league
 app_league_participants:
     path: api/round/show/players/leagues
     controller: App\Controller\RoundController::show
 
-# Read round
+# Create round
 app_league_round_create:
     path: api/league/round/create/{id}
     controller: App\Controller\RoundController::create
 
+# Read round
+app_edit_status-game:
+    path: api/edit/status-game/{id}
+    controller: App\Controller\RoundController::editStatus
 
- ########################
-# CRUD -> Entity Player #
-########################
-
-# Player register
-app_player_register:
-    path: api/player/register
-    controller: App\Controller\PlayerController::register
-
-
-# Read player
-app_player_list:
-    path: api/player/showPJ
-    controller: App\Controller\PlayerController::showPJ
-
-# Read playerById
-app_player_list_id:
-    path: api/player/showPJId
-    controller: App\Controller\PlayerController::showPJId
-
-
-# Read playerById
-app_player_list_criteria:
-    path: api/player/criteria
-    controller: App\Controller\PlayerController::criteria
-
-
+# Read leagues-players
+app_show_leagues_player:
+    path: api/show/league-players
+    controller: App\Controller\RoundController::showRelation
 
 
 

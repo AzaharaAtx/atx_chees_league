@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: LeagueRepository::class)]
 class League
@@ -22,20 +23,21 @@ class League
     #[ORM\Column(length: 50)]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $start_date = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $end_date = null;
-
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $soft_delete = null;
 
     #[ORM\OneToMany(mappedBy: 'id_league_fk', targetEntity: Round::class, orphanRemoval: true)]
+    #[Ignore]
     private Collection $rounds;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $winner_league = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $start_date = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $end_date = null;
 
     public function __construct()
     {
@@ -67,30 +69,6 @@ class League
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getStartDate(): ?\DateTimeInterface
-    {
-        return $this->start_date;
-    }
-
-    public function setStartDate(?\DateTimeInterface $start_date): static
-    {
-        $this->start_date = $start_date;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?\DateTimeInterface
-    {
-        return $this->end_date;
-    }
-
-    public function setEndDate(?\DateTimeInterface $end_date): static
-    {
-        $this->end_date = $end_date;
 
         return $this;
     }
@@ -145,6 +123,30 @@ class League
     public function setWinnerLeague(?string $winner_league): static
     {
         $this->winner_league = $winner_league;
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTimeInterface
+    {
+        return $this->start_date;
+    }
+
+    public function setStartDate(?\DateTimeInterface $start_date): static
+    {
+        $this->start_date = $start_date;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->end_date;
+    }
+
+    public function setEndDate(?\DateTimeInterface $end_date): static
+    {
+        $this->end_date = $end_date;
 
         return $this;
     }

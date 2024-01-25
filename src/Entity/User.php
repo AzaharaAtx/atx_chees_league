@@ -44,6 +44,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $username_in_chess = null;
 
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $friend_link = null;
+
+    #[ORM\Column(type: Types::BIGINT, nullable: true)]
+    private ?string $phone = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -173,6 +179,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsernameInChess(string $username_in_chess): static
     {
         $this->username_in_chess = $username_in_chess;
+
+        return $this;
+    }
+
+    public function getFriendLink(): ?string
+    {
+        return $this->friend_link;
+    }
+
+    public function setFriendLink(?string $friend_link): static
+    {
+        $this->friend_link = $friend_link;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }

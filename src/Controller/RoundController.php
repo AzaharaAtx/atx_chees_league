@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class RoundController extends AbstractController
@@ -37,6 +38,21 @@ class RoundController extends AbstractController
             'data' => $league_player],
             200);
     }
+    #[Route('api/show/my/leagues', name: 'app_league_participate', methods: ['GET'])]
+    public function showMe(Request $request, SerializerInterface $serializer, Security $security): Response
+    {
+        $user = $security->getUser();
+
+        $league_player = $this->doctrine
+            ->getRepository(Game::class)
+            ->findBy([/*'status' => 'Pending',*/ 'white_player_fk' => $user/*, 'black_player_fk' => $user*/]);
+
+
+        $json = $serializer->serialize($league_player, 'json');
+        return $this->json([$json],200);
+    }
+
+
     #[Route('api/league/round/create/{id}', name: 'app_league_round_create', methods: ['POST'])]
     public function create(int $id, SerializerInterface $serializer, ChessRounds $chessRounds): JsonResponse
     {
@@ -62,10 +78,39 @@ class RoundController extends AbstractController
 
 
 
-        return $this->json([
-            'message' => 'Games created.',
-            'data' => $game,
-        ],
-            200);
+        return $this->json($game);
     }
+
+    #[Route('api/edit/status-game/{id}', name: 'app_edit_status-game', methods: ['PUT'])]
+    public function editStatus(Request $request, int $id): Response
+    {
+        $doctrine = $this->doctrine->getManager();
+        $em = $this->em;
+        $edit = $doctrine->getRepository(LeaguePlayer::class)->find($id);
+        if (!$edit) {
+            return $this->json(['error' => 'Game no encontrado.'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['defeats_number'])) {
+            $edit->setDefeatsNumber($data['defeats_number']);
+        }
+        if (isset($data['wins_number'])) {
+            $edit->setWinsNumber($data['wins_number']);
+        }
+
+        return $this->json(200);
+    }
+
+    #[Route('api/show/league-players', name: 'app_show_leagues_player', methods: ['GET'])]
+    public function showRelation(Request $request): Response
+    {
+        $game = $this->doctrine->getRepository(LeaguePlayer::class)->findAllParticipants();
+
+        return $this->json($game);
+    }
+
+
+
 }

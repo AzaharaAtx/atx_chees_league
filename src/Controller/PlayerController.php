@@ -26,33 +26,6 @@ class PlayerController extends AbstractController
         $this->serializer = $serializer;
     }
 
-    #[Route('api/player/register', name: 'app_player_register', methods: ['POST'])]
-    public function register(Request $request): Response
-    {
-        $data = json_decode($request->getContent(), true);
-
-        $player = new Player();
-        $form = $this->createForm(PlayerRegisterType::class, $player);
-        $form->submit($data);
-
-        $this->em->persist($player);
-        $this->em->flush();
-
-        return $this->json(['message' => 'Player created succesfully', 'player' => $player, 201]);
-    }
-
-    #[Route('api/player/showPJ', name: 'app_player_list', methods: ['GET'])]
-    public function showPJ(ManagerRegistry $doctrine, Request $request): JsonResponse
-    {
-        $pj_list = $doctrine->getRepository(Player::class)->findAllPJ();
-
-        $em = $doctrine->getManager();
-
-        return $this->json([
-            'message' => 'Player list recover',
-            'data' => $pj_list],
-            200);
-    }
 
     #[Route('api/player/showPJId', name: 'app_player_list_id', methods: ['POST'])]
     public function showPJId(Request $request, SerializerInterface $serializer): JsonResponse
