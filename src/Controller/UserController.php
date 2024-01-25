@@ -159,6 +159,10 @@ class UserController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
+        if (isset($data['email'])) {
+            $user->setEmail($data['email']);
+        }
+
         if (isset($data['full_name'])) {
             $user->setFullName($data['full_name']);
         }
