@@ -32,7 +32,6 @@ class UserController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
-    // OJO CON LAS RUTAS EN .yml CORREGIR
     #[Route('api/user/create', name: 'user_create', methods: ['POST'])]
     public function create(ManagerRegistry $doctrine,
                            TokenStorageInterface $tokenStorage,
